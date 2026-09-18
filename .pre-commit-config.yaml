@@ -1,0 +1,16 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        stages: [pre-commit]
+
+  - repo: local
+    hooks:
+      - id: pytest-check
+        name: Run tests before push
+        entry: python -m pytest
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
