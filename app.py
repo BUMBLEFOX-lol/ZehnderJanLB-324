@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from datetime import datetime
 from dataclasses import dataclass, field
+from zoneinfo import ZoneInfo
 import os
 from dotenv import load_dotenv
 
@@ -14,10 +15,14 @@ PASSWORD = os.getenv("PASSWORD")
 entries = []
 
 
+def zurich_now():
+    return datetime.now(ZoneInfo("Europe/Zurich"))
+
+
 @dataclass
 class Entry:
     content: str
-    timestamp: datetime = field(default_factory=datetime.now)
+    timestamp: datetime = field(default_factory=zurich_now)
     happiness: str = "😃"
 
 
