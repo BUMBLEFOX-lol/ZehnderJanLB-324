@@ -7,8 +7,10 @@ from dotenv import load_dotenv
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+
 load_dotenv()
 PASSWORD = os.getenv("PASSWORD")
+
 entries = []
 
 
@@ -16,6 +18,7 @@ entries = []
 class Entry:
     content: str
     timestamp: datetime = datetime.now()
+    happiness: str = "😃"
 
 
 @app.route("/")
@@ -27,12 +30,14 @@ def index():
 def login():
     if request.method == "POST":
         user_password = request.form.get("password")
+
         if user_password == PASSWORD:
             session["logged_in"] = True
             flash("Login successful!", "success")
             return redirect(url_for("index"))
-        else:
-            flash("Incorrect password. Please try again.", "error")
+
+        flash("Incorrect password. Please try again.", "error")
+
     return render_template("login.html")
 
 
@@ -46,9 +51,12 @@ def logout():
 @app.route("/add_entry", methods=["POST"])
 def add_entry():
     content = request.form.get("content")
+    happiness = request.form.get("happiness") or "😃"
+
     if content:
-        entry = Entry(content=content)
+        entry = Entry(content=content, happiness=happiness)
         entries.append(entry)
+
     return redirect(url_for("index"))
 
 
